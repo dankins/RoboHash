@@ -4,9 +4,6 @@ from robohash import RoboHash
 
 class TestSequenceFunctions(unittest.TestCase):
 
-    def setUp(self):
-        self.seq = range(10)
-
     def test_basics(self):
         h = RoboHash()
         h.insert(1, "foo")
