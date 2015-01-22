@@ -27,3 +27,16 @@ An array expansion will be done by creating a new Array twice the size as the or
 An item is retrieved in a very similar manner as insertion. The key will be hashed to determine the first slot to look.
 If the slot is empty, then the key does not exist in the hash table. If an item exists, it is then checked to make sure the key matches the one being requested.
 If the key does not match then linear probing will begin until either the key is found or an empty slot is encountered - indicating the requested key does not exist.
+
+# Usage
+```python
+
+array_size = 1117 # the size of the table to start with, will double when reaching storage_threshold
+storage threshold = 0.7 # the ratio of hashed items to buckets. Array will double when threshold is exceeded
+h = RoboHash(array_size,threshold)
+h.insert(1, "foo")
+res = h.get(1)
+h.pretty_print()
+h.stats.pretty_print()
+h.stats.print_distribution(h.storage, 10)
+```
