@@ -42,12 +42,16 @@ class RoboHash:
                 break
             else:
                 self.stats.increment_collisions()
-                idx += 1
+                if idx == self.array_size - 1:
+                    idx = 0
+                else:
+                    idx += 1
 
     """ retrieves an item from the hashtable with the specified key """
     def get(self, key):
         idx = self.__hash(key)
         self.stats.increment_requests()
+
         while True:
             item = self.storage[idx]
             self.stats.increment_seeks()
@@ -57,11 +61,16 @@ class RoboHash:
             elif item[0] == key:
                 return item[1]
             else:
-                idx += 1
-
+                if idx == self.array_size - 1:
+                    idx = 0
+                else:
+                    idx += 1
 
     def __hash(self, key):
         return hash(key) % self.array_size
+
+    def get_hash(self, key):
+        return self.__hash(key)
 
     def __resize_if_needed(self):
         if (self.stats.count / self.array_size) > self.storage_threshold:

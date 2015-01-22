@@ -13,10 +13,10 @@ class TestSequenceFunctions(unittest.TestCase):
     def test_resize(self):
         h = RoboHash(1117)
         for x in range(0, 120050):
-            h.insert(x, x*2)
+            h.insert(x*999999, x*2)
 
         for x in range(0, 120050):
-            val = h.get(x)
+            val = h.get(x*999999)
             self.assertEquals(val, x*2)
 
         stats = h.get_stats()
@@ -25,6 +25,7 @@ class TestSequenceFunctions(unittest.TestCase):
         self.assertEqual(h.array_size, 143103)
         print("test_resize")
         h.stats.pretty_print()
+        h.stats.print_distribution(h.storage, 10)
         print("\n")
 
     def test_overwrite(self):
@@ -44,6 +45,29 @@ class TestSequenceFunctions(unittest.TestCase):
         h.pretty_print()
         h.stats.pretty_print()
         print("\n")
+
+    def test_linear_probe_rollover(self):
+        h = RoboHash(10)
+        i = 0
+        # find an int that hashes to the last bucket in the storage array
+        while h.get_hash(i) != 9:
+            i += 1
+
+        h.insert(i, "first")
+
+        # find another one that hashes to the same bucket
+        j = i + 1
+        while h.get_hash(j) != 9:
+            j += 1
+
+        h.insert(j, "second")
+
+        self.assertEqual(h.get(i), "first")
+        self.assertEqual(h.get(j), "second")
+        print("test_linear_probe_rollover")
+        h.pretty_print()
+        print("\n")
+
 
 if __name__ == '__main__':
     unittest.main()
